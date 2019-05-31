@@ -1,0 +1,4 @@
+Copied from address, removed klibc.h include
+
+https://github.com/rellermeyer/course_os/blob/master/kernel/include/elf.h
+
