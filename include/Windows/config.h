@@ -3,6 +3,9 @@
 // Defines
 //------------------------------------------------------------------------------------------------
 
+// FIXME messages does not trace anything
+#define WINE_NO_DEBUG_MSGS
+
 // Mimic wine config.h
 #define __WINE_CONFIG_H
 
