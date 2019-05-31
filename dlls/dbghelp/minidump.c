@@ -587,7 +587,7 @@ static  unsigned        dump_modules(struct dump_context* dc, BOOL dump_elf)
     return sz;
 }
 
-#ifdef __i386__
+#if defined(__i386__) && !defined(_MSC_VER)
 extern void do_x86cpuid(unsigned int ax, unsigned int *p);
 __ASM_GLOBAL_FUNC( do_x86cpuid,
                    "pushl %esi\n\t"
