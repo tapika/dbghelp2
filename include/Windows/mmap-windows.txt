@@ -1,0 +1,5 @@
+
+Copied from, modified to be able to use it's API's:
+
+https://github.com/m-labs/uclibc-lm32/blob/master/utils/mmap-windows.c
+
