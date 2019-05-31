@@ -29,9 +29,9 @@
 #include <stdarg.h>
 #include <assert.h>
 
-#include "windef.h"
-#include "winbase.h"
-#include "winnls.h"
+//#include "windef.h"
+//#include "winbase.h"
+//#include "winnls.h"
 #include "wine/debug.h"
 #include "dbghelp_private.h"
 

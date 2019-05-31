@@ -19,8 +19,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#include "elf2.h"
 #include "config.h"
 #include "wine/port.h"
+#include "mmap-windows.h"
 
 #if defined(__svr4__) || defined(__sun)
 #define __ELF__ 1
@@ -48,7 +50,7 @@
 
 #include "image_private.h"
 
-#include "wine/library.h"
+//#include "wine/library.h"
 #include "wine/debug.h"
 #include "wine/heap.h"
 
@@ -138,6 +140,21 @@ struct elf_module_info
                                 elf_loader : 1;
     struct image_file_map       file_map;
 };
+
+
+#ifdef _WIN32
+//
+// Page size on windows, https://stackoverflow.com/a/12833855/2338477
+//
+#define sysconf(x) local_sysconf()
+
+size_t local_sysconf()
+{
+    SYSTEM_INFO sysInfo;
+    GetSystemInfo(&sysInfo);
+    return (size_t)sysInfo.dwPageSize;
+}
+#endif
 
 /******************************************************************
  *		elf_map_section

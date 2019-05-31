@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="dlls">
+      <UniqueIdentifier>{b12a8969-22b5-406e-a122-913a42e75677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dlls\dbghelp">
+      <UniqueIdentifier>{76269dbb-d84c-418c-9220-e78bde00362e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dlls\winecrt0">
+      <UniqueIdentifier>{2b3731e7-45b9-4ace-8c58-427a7f1452d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{795d322b-ef02-4bcb-ac62-56454916f896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\wine">
+      <UniqueIdentifier>{719c1e65-6952-4afd-9f83-6e3eb0fa94ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Windows">
+      <UniqueIdentifier>{837ec932-a940-47e1-804d-3e7326ba6ebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs">
+      <UniqueIdentifier>{f38cc8e3-0761-4c68-b4d5-300b0b5cec51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\port">
+      <UniqueIdentifier>{36fea545-a024-4e76-83b9-f5e74d94e5ad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dlls\dbghelp\coff.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\cpu_arm.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\cpu_arm64.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\cpu_i386.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\cpu_ppc.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\cpu_x86_64.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\crc32.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\dbghelp.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\dwarf.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\elf_module.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\macho_module.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\minidump.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\module.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\msc.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\path.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\pe_module.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\source.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\stabs.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\stack.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\storage.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\symbol.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\dbghelp\type.c">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
+    <ClCompile Include="dlls\winecrt0\debug.c">
+      <Filter>dlls\winecrt0</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Windows\mmap-windows.c">
+      <Filter>include\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\port\pread.c">
+      <Filter>libs\port</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\port\stubs.c">
+      <Filter>libs\port</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dlls\dbghelp\dbghelp_private.h">
+      <Filter>dlls\dbghelp</Filter>
+    </ClInclude>
+    <ClInclude Include="dlls\dbghelp\dwarf.h">
+      <Filter>dlls\dbghelp</Filter>
+    </ClInclude>
+    <ClInclude Include="dlls\dbghelp\wdbgexts.h">
+      <Filter>dlls\dbghelp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cvconst.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\dbghelp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ntdef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\winternl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\debug.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\exception.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\heap.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\list.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\mscvpdb.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\port.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\rbtree.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\winbase16.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wine\windef16.h">
+      <Filter>include\wine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Windows\config.h">
+      <Filter>include\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="dlls\dbghelp\image_private.h">
+      <Filter>dlls\dbghelp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Windows\elf.h">
+      <Filter>include\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Windows\elf2.h">
+      <Filter>include\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Windows\mmap-windows.h">
+      <Filter>include\Windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="include\Windows\elf.h.txt">
+      <Filter>include\Windows</Filter>
+    </Text>
+    <Text Include="include\Windows\elf2.h.txt">
+      <Filter>include\Windows</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

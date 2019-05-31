@@ -22,7 +22,8 @@
 #define __WINE_WINE_EXCEPTION_H
 
 #include <setjmp.h>
-#include <windef.h>
+#include <windows.h>                    //DWORD
+//#include <windef.h>
 #include <excpt.h>
 
 #ifdef __cplusplus
@@ -254,36 +255,36 @@ typedef struct __tagWINE_FRAME
 
 #endif /* USE_COMPILER_EXCEPTIONS */
 
-static inline EXCEPTION_REGISTRATION_RECORD *__wine_push_frame( EXCEPTION_REGISTRATION_RECORD *frame )
-{
-#if defined(__GNUC__) && defined(__i386__)
-    EXCEPTION_REGISTRATION_RECORD *prev;
-    __asm__ __volatile__(".byte 0x64\n\tmovl (0),%0"
-                         "\n\tmovl %0,(%1)"
-                         "\n\t.byte 0x64\n\tmovl %1,(0)"
-                         : "=&r" (prev) : "r" (frame) : "memory" );
-    return prev;
-#else
-    NT_TIB *teb = (NT_TIB *)NtCurrentTeb();
-    frame->Prev = teb->ExceptionList;
-    teb->ExceptionList = frame;
-    return frame->Prev;
-#endif
-}
-
-static inline EXCEPTION_REGISTRATION_RECORD *__wine_pop_frame( EXCEPTION_REGISTRATION_RECORD *frame )
-{
-#if defined(__GNUC__) && defined(__i386__)
-    __asm__ __volatile__(".byte 0x64\n\tmovl %0,(0)"
-                         : : "r" (frame->Prev) : "memory" );
-    return frame->Prev;
-
-#else
-    NT_TIB *teb = (NT_TIB *)NtCurrentTeb();
-    teb->ExceptionList = frame->Prev;
-    return frame->Prev;
-#endif
-}
+//static inline EXCEPTION_REGISTRATION_RECORD *__wine_push_frame( EXCEPTION_REGISTRATION_RECORD *frame )
+//{
+//#if defined(__GNUC__) && defined(__i386__)
+//    EXCEPTION_REGISTRATION_RECORD *prev;
+//    __asm__ __volatile__(".byte 0x64\n\tmovl (0),%0"
+//                         "\n\tmovl %0,(%1)"
+//                         "\n\t.byte 0x64\n\tmovl %1,(0)"
+//                         : "=&r" (prev) : "r" (frame) : "memory" );
+//    return prev;
+//#else
+//    NT_TIB *teb = (NT_TIB *)NtCurrentTeb();
+//    frame->Prev = teb->ExceptionList;
+//    teb->ExceptionList = frame;
+//    return frame->Prev;
+//#endif
+//}
+//
+//static inline EXCEPTION_REGISTRATION_RECORD *__wine_pop_frame( EXCEPTION_REGISTRATION_RECORD *frame )
+//{
+//#if defined(__GNUC__) && defined(__i386__)
+//    __asm__ __volatile__(".byte 0x64\n\tmovl %0,(0)"
+//                         : : "r" (frame->Prev) : "memory" );
+//    return frame->Prev;
+//
+//#else
+//    NT_TIB *teb = (NT_TIB *)NtCurrentTeb();
+//    teb->ExceptionList = frame->Prev;
+//    return frame->Prev;
+//#endif
+//}
 
 static inline EXCEPTION_REGISTRATION_RECORD *__wine_get_frame(void)
 {

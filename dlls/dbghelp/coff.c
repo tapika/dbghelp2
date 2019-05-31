@@ -44,11 +44,11 @@
 #endif
 
 #include <stdarg.h>
-#include "windef.h"
-#include "winbase.h"
-#include "winternl.h"
+//#include "windef.h"
+//#include "winbase.h"
+//#include "winternl.h"
 
-#include "wine/exception.h"
+//#include "wine/exception.h"
 #include "wine/debug.h"
 #include "dbghelp_private.h"
 #include "wine/mscvpdb.h"
@@ -176,7 +176,7 @@ DECLSPEC_HIDDEN BOOL coff_process_info(const struct msc_debug_info* msc_dbg)
     TRACE("Processing COFF symbols...\n");
 
     assert(sizeof(IMAGE_SYMBOL) == IMAGE_SIZEOF_SYMBOL);
-    assert(sizeof(IMAGE_LINENUMBER) == IMAGE_SIZEOF_LINENUMBER);
+    //assert(sizeof(IMAGE_LINENUMBER) == IMAGE_SIZEOF_LINENUMBER);
 
     coff_files.files = NULL;
     coff_files.nfiles = coff_files.nfiles_alloc = 0;

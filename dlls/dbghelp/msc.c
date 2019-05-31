@@ -47,9 +47,9 @@
 #endif
 
 #include <stdarg.h>
-#include "windef.h"
-#include "winbase.h"
-#include "winternl.h"
+//#include "windef.h"
+//#include "winbase.h"
+//#include "winternl.h"
 
 #include "wine/exception.h"
 #include "wine/debug.h"

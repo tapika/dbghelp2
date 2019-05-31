@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dlls\dbghelp\coff.c" />
+    <ClCompile Include="dlls\dbghelp\cpu_arm.c" />
+    <ClCompile Include="dlls\dbghelp\cpu_arm64.c" />
+    <ClCompile Include="dlls\dbghelp\cpu_i386.c" />
+    <ClCompile Include="dlls\dbghelp\cpu_ppc.c" />
+    <ClCompile Include="dlls\dbghelp\cpu_x86_64.c" />
+    <ClCompile Include="dlls\dbghelp\crc32.c" />
+    <ClCompile Include="dlls\dbghelp\dbghelp.c" />
+    <ClCompile Include="dlls\dbghelp\dwarf.c" />
+    <ClCompile Include="dlls\dbghelp\elf_module.c" />
+    <ClCompile Include="dlls\dbghelp\macho_module.c" />
+    <ClCompile Include="dlls\dbghelp\minidump.c" />
+    <ClCompile Include="dlls\dbghelp\module.c" />
+    <ClCompile Include="dlls\dbghelp\msc.c" />
+    <ClCompile Include="dlls\dbghelp\path.c" />
+    <ClCompile Include="dlls\dbghelp\pe_module.c" />
+    <ClCompile Include="dlls\dbghelp\source.c" />
+    <ClCompile Include="dlls\dbghelp\stabs.c" />
+    <ClCompile Include="dlls\dbghelp\stack.c" />
+    <ClCompile Include="dlls\dbghelp\storage.c" />
+    <ClCompile Include="dlls\dbghelp\symbol.c" />
+    <ClCompile Include="dlls\dbghelp\type.c" />
+    <ClCompile Include="dlls\winecrt0\debug.c" />
+    <ClCompile Include="include\Windows\mmap-windows.c" />
+    <ClCompile Include="libs\port\pread.c" />
+    <ClCompile Include="libs\port\stubs.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dlls\dbghelp\dbghelp_private.h" />
+    <ClInclude Include="dlls\dbghelp\dwarf.h" />
+    <ClInclude Include="dlls\dbghelp\image_private.h" />
+    <ClInclude Include="dlls\dbghelp\wdbgexts.h" />
+    <ClInclude Include="include\cvconst.h" />
+    <ClInclude Include="include\dbghelp.h" />
+    <ClInclude Include="include\ntdef.h" />
+    <ClInclude Include="include\Windows\config.h" />
+    <ClInclude Include="include\Windows\elf.h" />
+    <ClInclude Include="include\Windows\elf2.h" />
+    <ClInclude Include="include\Windows\mmap-windows.h" />
+    <ClInclude Include="include\wine\debug.h" />
+    <ClInclude Include="include\wine\exception.h" />
+    <ClInclude Include="include\wine\heap.h" />
+    <ClInclude Include="include\wine\list.h" />
+    <ClInclude Include="include\wine\mscvpdb.h" />
+    <ClInclude Include="include\wine\port.h" />
+    <ClInclude Include="include\wine\rbtree.h" />
+    <ClInclude Include="include\wine\winbase16.h" />
+    <ClInclude Include="include\wine\windef16.h" />
+    <ClInclude Include="include\winternl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="include\Windows\elf.h.txt" />
+    <Text Include="include\Windows\elf2.h.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{CABA6161-CE7E-421E-B2DD-3D790CCD2088}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>dbghelp2</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>obj\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>obj\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>obj\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>obj\$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>DBGHELP_EXPORTS;_CRT_SECURE_NO_WARNINGS;_DEBUG</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>include;include\$(TargetPlatformIdentifier)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>version.lib;ntdll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>DBGHELP_EXPORTS;_CRT_SECURE_NO_WARNINGS;_DEBUG</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>include;include\$(TargetPlatformIdentifier)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>version.lib;ntdll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>DBGHELP_EXPORTS;_CRT_SECURE_NO_WARNINGS;NDEBUG</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>include;include\$(TargetPlatformIdentifier)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>version.lib;ntdll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>DBGHELP_EXPORTS;_CRT_SECURE_NO_WARNINGS;NDEBUG</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>include;include\$(TargetPlatformIdentifier)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>version.lib;ntdll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

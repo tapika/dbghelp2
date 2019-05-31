@@ -166,7 +166,7 @@ struct cpu* cpu_find(DWORD machine)
  *		SymSetSearchPathW (DBGHELP.@)
  *
  */
-BOOL WINAPI SymSetSearchPathW(HANDLE hProcess, PCWSTR searchPath)
+BOOL DBGHELP_API SymSetSearchPathW(HANDLE hProcess, PCWSTR searchPath)
 {
     struct process* pcs = process_find_by_handle(hProcess);
 
@@ -184,7 +184,7 @@ BOOL WINAPI SymSetSearchPathW(HANDLE hProcess, PCWSTR searchPath)
  *		SymSetSearchPath (DBGHELP.@)
  *
  */
-BOOL WINAPI SymSetSearchPath(HANDLE hProcess, PCSTR searchPath)
+BOOL DBGHELP_API SymSetSearchPath(HANDLE hProcess, PCSTR searchPath)
 {
     BOOL        ret = FALSE;
     unsigned    len;
@@ -204,7 +204,7 @@ BOOL WINAPI SymSetSearchPath(HANDLE hProcess, PCSTR searchPath)
 /***********************************************************************
  *		SymGetSearchPathW (DBGHELP.@)
  */
-BOOL WINAPI SymGetSearchPathW(HANDLE hProcess, PWSTR szSearchPath,
+BOOL DBGHELP_API SymGetSearchPathW(HANDLE hProcess, PWSTR szSearchPath,
                               DWORD SearchPathLength)
 {
     struct process* pcs = process_find_by_handle(hProcess);
@@ -217,7 +217,7 @@ BOOL WINAPI SymGetSearchPathW(HANDLE hProcess, PWSTR szSearchPath,
 /***********************************************************************
  *		SymGetSearchPath (DBGHELP.@)
  */
-BOOL WINAPI SymGetSearchPath(HANDLE hProcess, PSTR szSearchPath,
+BOOL DBGHELP_API SymGetSearchPath(HANDLE hProcess, PSTR szSearchPath,
                              DWORD SearchPathLength)
 {
     WCHAR*      buffer = HeapAlloc(GetProcessHeap(), 0, SearchPathLength * sizeof(WCHAR));
@@ -291,7 +291,7 @@ static BOOL check_live_target(struct process* pcs)
  * Note also that this scheme can be intertwined with the deferred loading 
  * mechanism (ie only load the debug information when we actually need it).
  */
-BOOL WINAPI SymInitializeW(HANDLE hProcess, PCWSTR UserSearchPath, BOOL fInvadeProcess)
+BOOL DBGHELP_API SymInitializeW(HANDLE hProcess, PCWSTR UserSearchPath, BOOL fInvadeProcess)
 {
     struct process*     pcs;
     BOOL wow64, child_wow64;
@@ -381,7 +381,7 @@ BOOL WINAPI SymInitializeW(HANDLE hProcess, PCWSTR UserSearchPath, BOOL fInvadeP
  *
  *
  */
-BOOL WINAPI SymInitialize(HANDLE hProcess, PCSTR UserSearchPath, BOOL fInvadeProcess)
+BOOL DBGHELP_API SymInitialize(HANDLE hProcess, PCSTR UserSearchPath, BOOL fInvadeProcess)
 {
     WCHAR*              sp = NULL;
     BOOL                ret;
@@ -404,7 +404,7 @@ BOOL WINAPI SymInitialize(HANDLE hProcess, PCSTR UserSearchPath, BOOL fInvadePro
  *		SymCleanup (DBGHELP.@)
  *
  */
-BOOL WINAPI SymCleanup(HANDLE hProcess)
+BOOL DBGHELP_API SymCleanup(HANDLE hProcess)
 {
     struct process**    ppcs;
     struct process*     next;
@@ -431,7 +431,7 @@ BOOL WINAPI SymCleanup(HANDLE hProcess)
  *		SymSetOptions (DBGHELP.@)
  *
  */
-DWORD WINAPI SymSetOptions(DWORD opts)
+DWORD DBGHELP_API SymSetOptions(DWORD opts)
 {
     struct process* pcs;
 
@@ -446,7 +446,7 @@ DWORD WINAPI SymSetOptions(DWORD opts)
  *		SymGetOptions (DBGHELP.@)
  *
  */
-DWORD WINAPI SymGetOptions(void)
+DWORD DBGHELP_API SymGetOptions(void)
 {
     return dbghelp_options;
 }
@@ -455,7 +455,7 @@ DWORD WINAPI SymGetOptions(void)
  *		SymSetParentWindow (DBGHELP.@)
  *
  */
-BOOL WINAPI SymSetParentWindow(HWND hwnd)
+BOOL DBGHELP_API SymSetParentWindow(HWND hwnd)
 {
     /* Save hwnd so it can be used as parent window */
     FIXME("(%p): stub\n", hwnd);
@@ -466,7 +466,7 @@ BOOL WINAPI SymSetParentWindow(HWND hwnd)
  *		SymSetContext (DBGHELP.@)
  *
  */
-BOOL WINAPI SymSetContext(HANDLE hProcess, PIMAGEHLP_STACK_FRAME StackFrame,
+BOOL DBGHELP_API SymSetContext(HANDLE hProcess, PIMAGEHLP_STACK_FRAME StackFrame,
                           PIMAGEHLP_CONTEXT Context)
 {
     struct process* pcs = process_find_by_handle(hProcess);
@@ -606,7 +606,7 @@ static BOOL sym_register_cb(HANDLE hProcess,
 /***********************************************************************
  *		SymRegisterCallback (DBGHELP.@)
  */
-BOOL WINAPI SymRegisterCallback(HANDLE hProcess, 
+BOOL DBGHELP_API SymRegisterCallback(HANDLE hProcess, 
                                 PSYMBOL_REGISTERED_CALLBACK CallbackFunction,
                                 PVOID UserContext)
 {
@@ -618,7 +618,7 @@ BOOL WINAPI SymRegisterCallback(HANDLE hProcess,
 /***********************************************************************
  *		SymRegisterCallback64 (DBGHELP.@)
  */
-BOOL WINAPI SymRegisterCallback64(HANDLE hProcess, 
+BOOL DBGHELP_API SymRegisterCallback64(HANDLE hProcess, 
                                   PSYMBOL_REGISTERED_CALLBACK64 CallbackFunction,
                                   ULONG64 UserContext)
 {
@@ -630,7 +630,7 @@ BOOL WINAPI SymRegisterCallback64(HANDLE hProcess,
 /***********************************************************************
  *		SymRegisterCallbackW64 (DBGHELP.@)
  */
-BOOL WINAPI SymRegisterCallbackW64(HANDLE hProcess, 
+BOOL DBGHELP_API SymRegisterCallbackW64(HANDLE hProcess, 
                                    PSYMBOL_REGISTERED_CALLBACK64 CallbackFunction,
                                    ULONG64 UserContext)
 {
@@ -645,7 +645,7 @@ static API_VERSION api_version = { 4, 0, 2, 0 };
 /***********************************************************************
  *           ImagehlpApiVersion (DBGHELP.@)
  */
-LPAPI_VERSION WINAPI ImagehlpApiVersion(VOID)
+LPAPI_VERSION DBGHELP_API ImagehlpApiVersion(VOID)
 {
     return &api_version;
 }
@@ -653,7 +653,7 @@ LPAPI_VERSION WINAPI ImagehlpApiVersion(VOID)
 /***********************************************************************
  *           ImagehlpApiVersionEx (DBGHELP.@)
  */
-LPAPI_VERSION WINAPI ImagehlpApiVersionEx(LPAPI_VERSION AppVersion)
+LPAPI_VERSION DBGHELP_API ImagehlpApiVersionEx(LPAPI_VERSION AppVersion)
 {
     if (!AppVersion) return NULL;
 
@@ -668,7 +668,7 @@ LPAPI_VERSION WINAPI ImagehlpApiVersionEx(LPAPI_VERSION AppVersion)
 /******************************************************************
  *		ExtensionApiVersion (DBGHELP.@)
  */
-LPEXT_API_VERSION WINAPI ExtensionApiVersion(void)
+LPEXT_API_VERSION DBGHELP_API ExtensionApiVersion(void)
 {
     static EXT_API_VERSION      eav = {5, 5, 5, 0};
     return &eav;
@@ -677,7 +677,7 @@ LPEXT_API_VERSION WINAPI ExtensionApiVersion(void)
 /******************************************************************
  *		WinDbgExtensionDllInit (DBGHELP.@)
  */
-void WINAPI WinDbgExtensionDllInit(PWINDBG_EXTENSION_APIS lpExtensionApis,
+void DBGHELP_API WinDbgExtensionDllInit(PWINDBG_EXTENSION_APIS lpExtensionApis,
                                    unsigned short major, unsigned short minor)
 {
 }

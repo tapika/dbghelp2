@@ -23,7 +23,8 @@
 #include "config.h"
 
 #include <stdlib.h>
-#include "windef.h"
+ //#include "windef.h"
+#include <Windows.h>
 
 int __wine_main_argc = 0;
 char **__wine_main_argv = NULL;

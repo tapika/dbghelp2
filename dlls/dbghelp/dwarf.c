@@ -46,12 +46,12 @@
 #include <zlib.h>
 #endif
 
-#include "windef.h"
-#include "winternl.h"
-#include "winbase.h"
-#include "winuser.h"
-#include "ole2.h"
-#include "oleauto.h"
+//#include "windef.h"
+//#include "winternl.h"
+//#include "winbase.h"
+//#include "winuser.h"
+//#include "ole2.h"
+//#include "oleauto.h"
 
 #include "dbghelp_private.h"
 #include "image_private.h"

@@ -23,8 +23,9 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <windef.h>
-#include <winbase.h>
+#include <windows.h>                    //ULONG_PTR
+//#include <windef.h>
+//#include <winbase.h>
 #ifndef GUID_DEFINED
 #include <guiddef.h>
 #endif

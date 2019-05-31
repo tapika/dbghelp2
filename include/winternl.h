@@ -21,8 +21,9 @@
 #ifndef __WINE_WINTERNL_H
 #define __WINE_WINTERNL_H
 
-#include <ntdef.h>
-#include <windef.h>
+#include <ntdef.h>          //EVENT_TYPE
+//#include <windef.h>
+#include <windows.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -607,9 +608,10 @@ typedef struct _FILE_INTERNAL_INFORMATION {
     LARGE_INTEGER IndexNumber;
 } FILE_INTERNAL_INFORMATION, *PFILE_INTERNAL_INFORMATION;
 
-typedef struct _FILE_ID_128 {
-    UCHAR Identifier[16];
-} FILE_ID_128, *PFILE_ID_128;
+// windows: Redefined in winnt.h
+//typedef struct _FILE_ID_128 {
+//    UCHAR Identifier[16];
+//} FILE_ID_128, *PFILE_ID_128;
 
 typedef struct _FILE_ID_INFORMATION {
     ULONGLONG VolumeSerialNumber;

@@ -29,7 +29,7 @@
 #include "dbghelp_private.h"
 #include "winternl.h"
 #include "psapi.h"
-#include "wine/asm.h"
+//#include "wine/asm.h"
 #include "wine/debug.h"
 
 WINE_DEFAULT_DEBUG_CHANNEL(dbghelp);
@@ -949,7 +949,7 @@ static unsigned         dump_misc_info(struct dump_context* dc)
  *		MiniDumpWriteDump (DEBUGHLP.@)
  *
  */
-BOOL WINAPI MiniDumpWriteDump(HANDLE hProcess, DWORD pid, HANDLE hFile,
+BOOL DBGHELP_API MiniDumpWriteDump(HANDLE hProcess, DWORD pid, HANDLE hFile,
                               MINIDUMP_TYPE DumpType,
                               PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
                               PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam,
@@ -1110,7 +1110,7 @@ BOOL WINAPI MiniDumpWriteDump(HANDLE hProcess, DWORD pid, HANDLE hFile,
  *
  *
  */
-BOOL WINAPI MiniDumpReadDumpStream(PVOID base, ULONG str_idx,
+BOOL DBGHELP_API MiniDumpReadDumpStream(PVOID base, ULONG str_idx,
                                    PMINIDUMP_DIRECTORY* pdir,
                                    PVOID* stream, ULONG* size)
 {

@@ -22,16 +22,17 @@
  */
 
 #include <stdarg.h>
-#include "windef.h"
-#include "winbase.h"
-#include "winver.h"
+//#include "windef.h"
+//#include "winbase.h"
+//#include "winver.h"
+#include <windows.h>                //PSTR
 #include "dbghelp.h"
 #include "objbase.h"
 #include "oaidl.h"
 #include "winnls.h"
 #include "wine/list.h"
-#include "wine/unicode.h"
-#include "wine/rbtree.h"
+//#include "wine/unicode.h"
+#include "wine/rbtree.h"            //wine_rb_tree
 
 #include "cvconst.h"
 

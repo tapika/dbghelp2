@@ -63,7 +63,8 @@
 #define isnan(x) _isnan(x)
 #define popen _popen
 #define pclose _pclose
-#define snprintf _snprintf
+ // windows: ucrt\stdio.h(1933): warning C4005: 'snprintf': macro redefinition
+ //#define snprintf _snprintf
 #define strtoll _strtoi64
 #define strtoull _strtoui64
 #define strncasecmp _strnicmp

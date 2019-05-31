@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#include "config.h"
 #include <assert.h>
 
 #define NONAMELESSUNION
@@ -127,11 +128,11 @@ static void dump_unwind_info(struct cpu_stack_walk* csw, ULONG64 base, RUNTIME_F
     TRACE("**** func %x-%x\n", function->BeginAddress, function->EndAddress);
     for (;;)
     {
-        if (function->UnwindData & 1)
+        if (function->u.UnwindData & 1)
         {
-            if (!sw_read_mem(csw, base + function->UnwindData, &snext, sizeof(snext)))
+            if (!sw_read_mem(csw, base + function->u.UnwindData, &snext, sizeof(snext)))
             {
-                TRACE("Couldn't unwind RUNTIME_INFO at %lx\n", base + function->UnwindData);
+                TRACE("Couldn't unwind RUNTIME_INFO at %lx\n", base + function->u.UnwindData);
                 return;
             }
             TRACE("unwind info for function %p-%p chained to function %p-%p\n",
@@ -140,7 +141,7 @@ static void dump_unwind_info(struct cpu_stack_walk* csw, ULONG64 base, RUNTIME_F
             function = &snext;
             continue;
         }
-        addr = base + function->UnwindData;
+        addr = base + function->u.UnwindData;
         if (!sw_read_mem(csw, addr, info, FIELD_OFFSET(UNWIND_INFO, UnwindCode)) ||
             !sw_read_mem(csw, addr + FIELD_OFFSET(UNWIND_INFO, UnwindCode),
                          info->UnwindCode, info->CountOfCodes * sizeof(UNWIND_CODE)))
@@ -480,17 +481,17 @@ static BOOL interpret_function_table_entry(struct cpu_stack_walk* csw,
     newframe = context->Rsp;
     for (;;)
     {
-        if (!sw_read_mem(csw, base + function->UnwindData, info, sizeof(*info)) ||
-            !sw_read_mem(csw, base + function->UnwindData + FIELD_OFFSET(UNWIND_INFO, UnwindCode),
+        if (!sw_read_mem(csw, base + function->u.UnwindData, info, sizeof(*info)) ||
+            !sw_read_mem(csw, base + function->u.UnwindData + FIELD_OFFSET(UNWIND_INFO, UnwindCode),
                          info->UnwindCode, info->CountOfCodes * sizeof(UNWIND_CODE)))
         {
-            WARN("Couldn't read unwind_code at %lx\n", base + function->UnwindData);
+            WARN("Couldn't read unwind_code at %lx\n", base + function->u.UnwindData);
             return FALSE;
         }
 
         if (info->Version != 1)
         {
-            WARN("unknown unwind info version %u at %lx\n", info->Version, base + function->UnwindData);
+            WARN("unknown unwind info version %u at %lx\n", info->Version, base + function->u.UnwindData);
             return FALSE;
         }
 
@@ -563,7 +564,7 @@ static BOOL interpret_function_table_entry(struct cpu_stack_walk* csw,
             }
         }
         if (!(info->Flags & UNW_FLAG_CHAININFO)) break;
-        if (!sw_read_mem(csw, base + function->UnwindData + FIELD_OFFSET(UNWIND_INFO, UnwindCode) +
+        if (!sw_read_mem(csw, base + function->u.UnwindData + FIELD_OFFSET(UNWIND_INFO, UnwindCode) +
                                    ((info->CountOfCodes + 1) & ~1) * sizeof(UNWIND_CODE),
                          &handler_data, sizeof(handler_data))) return FALSE;
         function = &handler_data.chain;  /* restart with the chained info */
@@ -712,7 +713,7 @@ static void*    x86_64_find_runtime_function(struct module* module, DWORD64 addr
         else
         {
             rtf += pos;
-            while (rtf->UnwindData & 1)  /* follow chained entry */
+            while (rtf->u.UnwindData & 1)  /* follow chained entry */
             {
                 FIXME("RunTime_Function outside IMAGE_DIRECTORY_ENTRY_EXCEPTION unimplemented yet!\n");
                 return NULL;
@@ -942,7 +943,7 @@ static BOOL x86_64_fetch_minidump_module(struct dump_context* dc, unsigned index
 
             while (rtf + 1 < end)
             {
-                while (rtf->UnwindData & 1)  /* follow chained entry */
+                while (rtf->u.UnwindData & 1)  /* follow chained entry */
                 {
                     FIXME("RunTime_Function outside IMAGE_DIRECTORY_ENTRY_EXCEPTION unimplemented yet!\n");
                     return FALSE;
@@ -950,9 +951,9 @@ static BOOL x86_64_fetch_minidump_module(struct dump_context* dc, unsigned index
                     /* rtf = (RUNTIME_FUNCTION*)(module->module.BaseOfImage + (rtf->UnwindData & ~1)); */
                 }
                 if (ReadProcessMemory(dc->hProcess,
-                                      (void*)(dc->modules[index].base + rtf->UnwindData),
+                                      (void*)(dc->modules[index].base + rtf->u.UnwindData),
                                       &ui, sizeof(ui), NULL))
-                    minidump_add_memory_block(dc, dc->modules[index].base + rtf->UnwindData,
+                    minidump_add_memory_block(dc, dc->modules[index].base + rtf->u.UnwindData,
                                               FIELD_OFFSET(UNWIND_INFO, UnwindCode) + ui.CountOfCodes * sizeof(UNWIND_CODE), 0);
                 rtf++;
             }

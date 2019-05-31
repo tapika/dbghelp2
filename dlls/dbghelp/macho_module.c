@@ -48,7 +48,7 @@
 #define WIN32_NO_STATUS
 #include "dbghelp_private.h"
 #include "winternl.h"
-#include "wine/library.h"
+//#include "wine/library.h"
 #include "wine/debug.h"
 #include "wine/heap.h"
 #include "image_private.h"

@@ -20,11 +20,12 @@
 
 #ifdef _WIN32
 
+#include "config.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "windef.h"
-#include "winbase.h"
+//#include "windef.h"
+//#include "winbase.h"
 #include "wine/debug.h"
 #include "wine/heap.h"
 
