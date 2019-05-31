@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\crashhandler_windows.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filesink.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g3log.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logcapture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\loglevels.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logmessage.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logworker.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stacktrace_windows.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\time.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="example\main_sigsegv.cpp">
+      <Filter>example</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\filesinkhelper.ipp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\g2log.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4e052886-6c84-4bb1-816d-139e956fc74e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="example">
+      <UniqueIdentifier>{aeb995e5-6e6f-4ea4-a87c-8d1d2b6bd1a0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

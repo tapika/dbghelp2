@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dbghelp2", "dbghelp2.vcxproj", "{CABA6161-CE7E-421E-B2DD-3D790CCD2088}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_g3log", "g3log\test_g3log.vcxproj", "{37499C20-74A9-4400-AAA6-33B8357C1ADC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{CABA6161-CE7E-421E-B2DD-3D790CCD2088}.Release|x64.Build.0 = Release|x64
 		{CABA6161-CE7E-421E-B2DD-3D790CCD2088}.Release|x86.ActiveCfg = Release|Win32
 		{CABA6161-CE7E-421E-B2DD-3D790CCD2088}.Release|x86.Build.0 = Release|Win32
+		{37499C20-74A9-4400-AAA6-33B8357C1ADC}.Debug|x64.ActiveCfg = Debug|x64
+		{37499C20-74A9-4400-AAA6-33B8357C1ADC}.Debug|x64.Build.0 = Debug|x64
+		{37499C20-74A9-4400-AAA6-33B8357C1ADC}.Debug|x86.ActiveCfg = Debug|Win32
+		{37499C20-74A9-4400-AAA6-33B8357C1ADC}.Debug|x86.Build.0 = Debug|Win32
+		{37499C20-74A9-4400-AAA6-33B8357C1ADC}.Release|x64.ActiveCfg = Release|x64
+		{37499C20-74A9-4400-AAA6-33B8357C1ADC}.Release|x64.Build.0 = Release|x64
+		{37499C20-74A9-4400-AAA6-33B8357C1ADC}.Release|x86.ActiveCfg = Release|Win32
+		{37499C20-74A9-4400-AAA6-33B8357C1ADC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
