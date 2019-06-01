@@ -23,7 +23,7 @@
 #include <mutex>
 #include <g3log/g3log.hpp>
 
-//#define DEFDBGHELP
+// #define DEFDBGHELP
 
 #if !defined(DEFDBGHELP)
     #if defined(_WIN64)
@@ -119,22 +119,27 @@ namespace {
 
       DWORD64 displacement64;
       DWORD displacement;
-      char symbol_buffer[sizeof(SYMBOL_INFO) + 256];
-      SYMBOL_INFO *symbol = reinterpret_cast<SYMBOL_INFO *>(symbol_buffer);
-      symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
-      symbol->MaxNameLen = MAX_SYM_NAME;
+      char symbol_buffer[sizeof(IMAGEHLP_SYMBOL64) + 256];
+      IMAGEHLP_SYMBOL64 *symbol = reinterpret_cast<IMAGEHLP_SYMBOL64 *>(symbol_buffer);
+      symbol->SizeOfStruct = sizeof(IMAGEHLP_SYMBOL64);
+      symbol->MaxNameLength = MAX_SYM_NAME;
 
       IMAGEHLP_LINE64 line;
       line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
       std::string lineInformation;
       std::string callInformation;
-      if (SymFromAddr(GetCurrentProcess(), addr, &displacement64, symbol)) {
-         callInformation.append(" ").append({std::string(symbol->Name), symbol->NameLen});
-         if (SymGetLineFromAddr64(GetCurrentProcess(), addr, &displacement, &line)) {
+
+      if (SymGetSymFromAddr64(GetCurrentProcess(), addr, &displacement64, symbol))
+      {
+          callInformation.append(" ").append(symbol->Name);
+
+          if (SymGetLineFromAddr64(GetCurrentProcess(), addr, &displacement, &line))
+          {
             lineInformation.append("\t").append(line.FileName).append(" L: ");
             lineInformation.append(std::to_string(line.LineNumber));
-         }
+          }
       }
+
       frame_dump.append(lineInformation).append(callInformation);
       return frame_dump;
    }
@@ -143,6 +148,13 @@ namespace {
    // Retrieves all the symbols for the stack frames, fills them witin a text representation and returns it
    std::string convertFramesToText(std::vector<uint64_t> &frame_pointers) {
       std::string dump; // slightly more efficient than ostringstream
+
+      #ifdef DEFDBGHELP
+          dump += "stack using windows standard dbghelp.dll\n\n";
+      #else
+          dump += "stack using dbghelp2.dll\n\n";
+      #endif
+
       const size_t kSize = frame_pointers.size();
       for (size_t index = 0; index < kSize && frame_pointers[index]; ++index) {
          dump += getSymbolInformation(index, frame_pointers);

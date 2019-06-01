@@ -1393,7 +1393,7 @@ static BOOL codeview_parse_type_table(struct codeview_type_parse* ctp)
 /*========================================================================
  * Process CodeView line number information.
  */
-static unsigned long codeview_get_address(const struct msc_debug_info* msc_dbg,
+static uint64_t codeview_get_address(const struct msc_debug_info* msc_dbg,
                                           unsigned seg, unsigned offset);
 
 static void codeview_snarf_linetab(const struct msc_debug_info* msc_dbg, const BYTE* linetab,
@@ -1538,7 +1538,7 @@ static void codeview_snarf_linetab2(const struct msc_debug_info* msc_dbg, const 
  * Process CodeView symbol information.
  */
 
-static unsigned int codeview_map_offset(const struct msc_debug_info* msc_dbg,
+static uint64_t codeview_map_offset(const struct msc_debug_info* msc_dbg,
                                         unsigned int offset)
 {
     int                 nomap = msc_dbg->nomap;
@@ -1555,7 +1555,7 @@ static unsigned int codeview_map_offset(const struct msc_debug_info* msc_dbg,
     return 0;
 }
 
-static unsigned long codeview_get_address(const struct msc_debug_info* msc_dbg,
+static uint64_t codeview_get_address(const struct msc_debug_info* msc_dbg,
                                           unsigned seg, unsigned offset)
 {
     int			        nsect = msc_dbg->nsect;

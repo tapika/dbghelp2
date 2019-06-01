@@ -33,6 +33,7 @@
 #include "wine/list.h"
 //#include "wine/unicode.h"
 #include "wine/rbtree.h"            //wine_rb_tree
+#include <stdint.h>                 //uint64_t
 
 #include "cvconst.h"
 
@@ -139,7 +140,7 @@ struct location
 {
     unsigned            kind : 8,
                         reg;
-    unsigned long       offset;
+    uint64_t            offset;
 };
 
 struct symt
@@ -157,7 +158,7 @@ struct symt_ht
 struct symt_block
 {
     struct symt                 symt;
-    unsigned long               address;
+    uint64_t                    address;
     unsigned long               size;
     struct symt*                container;      /* block, or func */
     struct vector               vchildren;      /* sub-blocks & local variables */
@@ -166,7 +167,7 @@ struct symt_block
 struct symt_compiland
 {
     struct symt                 symt;
-    unsigned long               address;
+    uint64_t                    address;
     unsigned                    source;
     struct vector               vchildren;      /* global variables & functions */
 };
@@ -207,7 +208,7 @@ struct symt_function
 {
     struct symt                 symt;
     struct hash_table_elt       hash_elt;       /* if global symbol */
-    unsigned long               address;
+    uint64_t                    address;
     struct symt*                container;      /* compiland */
     struct symt*                type;           /* points to function_signature */
     unsigned long               size;
@@ -229,7 +230,7 @@ struct symt_public
     struct hash_table_elt       hash_elt;
     struct symt*                container;      /* compiland */
     BOOL is_function;
-    unsigned long               address;
+    uint64_t                    address;
     unsigned long               size;
 };
 
@@ -238,7 +239,7 @@ struct symt_thunk
     struct symt                 symt;
     struct hash_table_elt       hash_elt;
     struct symt*                container;      /* compiland */
-    unsigned long               address;
+    uint64_t                    address;
     unsigned long               size;
     THUNK_ORDINAL               ordinal;        /* FIXME: doesn't seem to be accessible */
 };
@@ -417,7 +418,7 @@ struct line_info
                                 line_number;
     union
     {
-        unsigned long               pc_offset;   /* if is_source_file isn't set */
+        uint64_t                    pc_offset;   /* if is_source_file isn't set */
         unsigned                    source_file; /* if is_source_file is set */
     } u;
 };
@@ -740,7 +741,7 @@ extern struct symt_function*
                     symt_new_function(struct module* module,
                                       struct symt_compiland* parent,
                                       const char* name,
-                                      unsigned long addr, unsigned long size,
+                                      uint64_t addr, unsigned long size,
                                       struct symt* type) DECLSPEC_HIDDEN;
 extern BOOL         symt_normalize_function(struct module* module, 
                                             const struct symt_function* func) DECLSPEC_HIDDEN;

@@ -271,13 +271,13 @@ struct symt_data* symt_new_global_variable(struct module* module,
 struct symt_function* symt_new_function(struct module* module, 
                                         struct symt_compiland* compiland, 
                                         const char* name,
-                                        unsigned long addr, unsigned long size,
+                                        uint64_t addr, unsigned long size,
                                         struct symt* sig_type)
 {
     struct symt_function*       sym;
     struct symt**               p;
 
-    TRACE_(dbghelp_symt)("Adding global function %s:%s @%lx-%lx\n",
+    TRACE_(dbghelp_symt)("Adding global function %s:%s @%llx-%llx\n",
                          debugstr_w(module->module.ModuleName), name, addr, addr + size - 1);
 
     assert(!sig_type || sig_type->tag == SymTagFunctionType);
@@ -422,7 +422,7 @@ struct symt_block* symt_close_func_block(struct module* module,
     assert(func);
     assert(func->symt.tag == SymTagFunction);
 
-    if (pc) block->size = func->address + pc - block->address;
+    if (pc) block->size = (uint32_t)(func->address + pc - block->address);
     return (block->container->tag == SymTagBlock) ? 
         CONTAINING_RECORD(block->container, struct symt_block, symt) : NULL;
 }
@@ -933,7 +933,7 @@ static BOOL symt_enum_locals_helper(struct module_pair* pair,
                                     struct symt_function* func, const struct vector* v)
 {
     struct symt*        lsym = NULL;
-    DWORD               pc = pair->pcs->ctx_frame.InstructionOffset;
+    uint64_t            pc = pair->pcs->ctx_frame.InstructionOffset;
     unsigned int        i;
     WCHAR*              nameW;
     BOOL                ret;
@@ -1189,7 +1189,9 @@ struct sym_enumerate
 static BOOL CALLBACK sym_enumerate_cb(PSYMBOL_INFO syminfo, ULONG size, void* ctx)
 {
     struct sym_enumerate*       se = ctx;
-    return (se->cb)(syminfo->Name, syminfo->Address, syminfo->Size, se->ctx);
+    return (se->cb)(syminfo->Name, 
+        // Loses digits, use SymEnumerateSymbols instead.
+        (uint32_t)syminfo->Address, syminfo->Size, se->ctx);
 }
 
 /***********************************************************************
@@ -1300,8 +1302,9 @@ BOOL WINAPI SymGetSymFromAddr(HANDLE hProcess, DWORD Address,
         return FALSE;
 
     if (Displacement)
-        *Displacement = Displacement64;
-    Symbol->Address = si->Address;
+        // Conversion loses digits, use SymGetSymFromAddr64 instead.
+        *Displacement = (DWORD) Displacement64;
+    Symbol->Address = (DWORD) si->Address;
     Symbol->Size    = si->Size;
     Symbol->Flags   = si->Flags;
     len = min(Symbol->MaxNameLength, si->MaxNameLen);
@@ -1442,7 +1445,8 @@ BOOL WINAPI SymGetSymFromName(HANDLE hProcess, PCSTR Name, PIMAGEHLP_SYMBOL Symb
     si->MaxNameLen = MAX_SYM_NAME;
     if (!SymFromName(hProcess, Name, si)) return FALSE;
 
-    Symbol->Address = si->Address;
+    // Conversion loses digits, use SymGetSymFromName64
+    Symbol->Address = (DWORD)si->Address;
     Symbol->Size    = si->Size;
     Symbol->Flags   = si->Flags;
     len = min(Symbol->MaxNameLength, si->MaxNameLen);
@@ -1570,7 +1574,8 @@ static void copy_line_32_from_64(IMAGEHLP_LINE* l32, const IMAGEHLP_LINE64* l64)
     l32->Key = l64->Key;
     l32->LineNumber = l64->LineNumber;
     l32->FileName = l64->FileName;
-    l32->Address = l64->Address;
+    // Conversion loses digits, use *64 functions instead.
+    l32->Address = (DWORD)l64->Address;
 }
 
 /******************************************************************
@@ -1612,7 +1617,7 @@ BOOL WINAPI SymGetLineFromAddr64(HANDLE hProcess, DWORD64 dwAddr,
     if (symt->symt.tag != SymTagFunction) return FALSE;
     if (!symt_fill_func_line_info(pair.effective, (struct symt_function*)symt,
                                   dwAddr, Line)) return FALSE;
-    *pdwDisplacement = dwAddr - Line->Address;
+    *pdwDisplacement = (DWORD)(dwAddr - Line->Address);
     return TRUE;
 }
 

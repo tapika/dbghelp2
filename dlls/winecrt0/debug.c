@@ -42,6 +42,7 @@ static int (__cdecl *p__wine_dbg_header)( enum __wine_debug_class cls,
 static const char * const debug_classes[] = { "fixme", "err", "warn", "trace" };
 
 static unsigned char default_flags = (1 << __WINE_DBCL_ERR) | (1 << __WINE_DBCL_FIXME);
+//static unsigned char default_flags = (1 << __WINE_DBCL_TRACE);
 static int nb_debug_options = -1;
 static int options_size;
 static struct __wine_debug_channel *debug_options;
