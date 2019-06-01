@@ -26,10 +26,18 @@
 // #define DEFDBGHELP
 
 #if !defined(DEFDBGHELP)
-    #if defined(_WIN64)
-        #pragma comment(lib, __FILE__ "\\..\\..\\..\\bin\\debug_x64\\dbghelp2.lib")
+    #ifdef _DEBUG
+        #if defined(_WIN64)
+            #pragma comment(lib, __FILE__ "\\..\\..\\..\\bin\\debug_x64\\dbghelp2.lib")
+        #else
+            #pragma comment(lib, __FILE__ "\\..\\..\\..\\bin\\debug_Win32\\dbghelp2.lib")
+        #endif
     #else
-        #pragma comment(lib, __FILE__ "\\..\\..\\..\\bin\\debug_Win32\\dbghelp2.lib")
+        #if defined(_WIN64)
+            #pragma comment(lib, __FILE__ "\\..\\..\\..\\bin\\release_x64\\dbghelp2.lib")
+        #else
+            #pragma comment(lib, __FILE__ "\\..\\..\\..\\bin\\release_Win32\\dbghelp2.lib")
+        #endif
     #endif
 #else
     #pragma comment(lib, "dbghelp.lib")
