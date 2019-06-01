@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dbghelp2", "dbghelp2.vcxproj", "{CABA6161-CE7E-421E-B2DD-3D790CCD2088}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_g3log", "g3log\test_g3log.vcxproj", "{37499C20-74A9-4400-AAA6-33B8357C1ADC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CABA6161-CE7E-421E-B2DD-3D790CCD2088} = {CABA6161-CE7E-421E-B2DD-3D790CCD2088}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
