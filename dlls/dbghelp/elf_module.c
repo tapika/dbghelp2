@@ -23,6 +23,7 @@
 #include "config.h"
 #include "wine/port.h"
 #include "mmap-windows.h"
+#include "cutf.h"
 
 #if defined(__svr4__) || defined(__sun)
 #define __ELF__ 1
@@ -375,9 +376,9 @@ static BOOL elf_map_file(struct elf_map_file_data* emfd, struct image_file_map* 
     switch (emfd->kind)
     {
     case from_file:
-        len = WideCharToMultiByte(CP_UNIXCP, 0, emfd->u.file.filename, -1, NULL, 0, NULL, NULL);
+        len = wcharzestimate(emfd->u.file.filename);
         if (!(filename = HeapAlloc(GetProcessHeap(), 0, len))) return FALSE;
-        WideCharToMultiByte(CP_UNIXCP, 0, emfd->u.file.filename, -1, filename, len, NULL, NULL);
+        wcharztoutf8(emfd->u.file.filename, filename, len);
         break;
     case from_process:
         filename = NULL;
@@ -1001,7 +1002,7 @@ static BOOL elf_locate_debug_link(struct image_file_map* fmap, const char* filen
     fmap_link = HeapAlloc(GetProcessHeap(), 0, sizeof(*fmap_link));
     if (!fmap_link) return FALSE;
 
-    filename_len = MultiByteToWideChar(CP_UNIXCP, 0, filename, -1, NULL, 0);
+    filename_len = utf8zestimate(filename);
     p = HeapAlloc(GetProcessHeap(), 0,
                   (globalDebugDirLen + strlenW(loaded_file) + 6 + 1 + filename_len + 1) * sizeof(WCHAR));
     if (!p) goto found;
@@ -1012,19 +1013,19 @@ static BOOL elf_locate_debug_link(struct image_file_map* fmap, const char* filen
     if (slash == NULL) slash = p; else slash++;
 
     /* testing execdir/filename */
-    MultiByteToWideChar(CP_UNIXCP, 0, filename, -1, slash, filename_len);
+    utf8ztowchar(filename, slash, filename_len);
     if (elf_check_debug_link(p, fmap_link, crc)) goto found;
 
     /* testing execdir/.debug/filename */
     memcpy(slash, dotDebugW, sizeof(dotDebugW));
-    MultiByteToWideChar(CP_UNIXCP, 0, filename, -1, slash + ARRAY_SIZE(dotDebugW), filename_len);
+    utf8ztowchar(filename, slash + ARRAY_SIZE(dotDebugW), filename_len);
     if (elf_check_debug_link(p, fmap_link, crc)) goto found;
 
     /* testing globaldebugdir/execdir/filename */
     memmove(p + globalDebugDirLen, p, (slash - p) * sizeof(WCHAR));
     memcpy(p, globalDebugDirW, globalDebugDirLen * sizeof(WCHAR));
     slash += globalDebugDirLen;
-    MultiByteToWideChar(CP_UNIXCP, 0, filename, -1, slash, filename_len);
+    utf8ztowchar(filename, slash, filename_len);
     if (elf_check_debug_link(p, fmap_link, crc)) goto found;
 
     /* finally testing filename */
@@ -1505,10 +1506,10 @@ static BOOL elf_load_file_from_path(HANDLE hProcess,
 
     if (!path) return FALSE;
 
-    len = MultiByteToWideChar(CP_UNIXCP, 0, path, -1, NULL, 0);
+    len = utf8zestimate(path);
     pathW = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR));
     if (!pathW) return FALSE;
-    MultiByteToWideChar(CP_UNIXCP, 0, path, -1, pathW, len);
+    utf8ztowchar(path, pathW, len);
 
     for (s = pathW; s && *s; s = (t) ? (t+1) : NULL)
     {
@@ -1548,13 +1549,13 @@ static BOOL elf_load_file_from_dll_path(HANDLE hProcess,
         WCHAR *name;
         unsigned len;
 
-        len = MultiByteToWideChar(CP_UNIXCP, 0, path, -1, NULL, 0);
+        len = utf8zestimate(path);
 
         name = HeapAlloc( GetProcessHeap(), 0,
                           (len + lstrlenW(filename) + 2) * sizeof(WCHAR) );
 
         if (!name) break;
-        MultiByteToWideChar(CP_UNIXCP, 0, path, -1, name, len);
+        utf8ztowchar(path, name, len);
         strcatW( name, S_SlashW );
         strcatW( name, filename );
         ret = elf_load_file(hProcess, name, load_offset, dyn_addr, elf_info);
@@ -1712,7 +1713,7 @@ static BOOL elf_enum_modules_internal(const struct process* pcs,
                 ReadProcessMemory(pcs->handle, lm.l_name, bufstr, sizeof(bufstr), NULL))
             {
                 bufstr[sizeof(bufstr) - 1] = '\0';
-                MultiByteToWideChar(CP_UNIXCP, 0, bufstr, -1, bufstrW, ARRAY_SIZE(bufstrW));
+                utf8ztowchar(bufstr, bufstrW, ARRAY_SIZE(bufstrW));
                 if (main_name && !bufstrW[0]) strcpyW(bufstrW, main_name);
                 if (!cb(bufstrW, (unsigned long)lm.l_addr, (unsigned long)lm.l_ld, FALSE, user))
                     break;
@@ -1746,7 +1747,7 @@ static BOOL elf_enum_modules_internal(const struct process* pcs,
                                   bufstr, sizeof(bufstr), NULL))
             {
                 bufstr[sizeof(bufstr) - 1] = '\0';
-                MultiByteToWideChar(CP_UNIXCP, 0, bufstr, -1, bufstrW, ARRAY_SIZE(bufstrW));
+                utf8ztowchar(bufstr, bufstrW, ARRAY_SIZE(bufstrW));
                 if (main_name && !bufstrW[0]) strcpyW(bufstrW, main_name);
                 if (!cb(bufstrW, (unsigned long)lm.l_addr, (unsigned long)lm.l_ld, FALSE, user))
                     break;

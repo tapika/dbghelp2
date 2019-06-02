@@ -26,6 +26,7 @@
 
 #include "dbghelp_private.h"
 #include "wine/debug.h"
+#include "cutf.h"
 
 WINE_DEFAULT_DEBUG_CHANNEL(dbghelp);
 
@@ -172,7 +173,7 @@ BOOL WINAPI SymEnumSourceFilesW(HANDLE hProcess, ULONG64 ModBase, PCWSTR Mask,
     if (!pair.effective->sources) return FALSE;
     for (ptr = pair.effective->sources; *ptr; ptr += strlen(ptr) + 1)
     {
-        DWORD len = MultiByteToWideChar(CP_ACP, 0, ptr, -1, NULL, 0);
+        DWORD len = utf8zestimate(ptr);
 
         if (len > conversion_buffer_len)
         {
@@ -182,7 +183,7 @@ BOOL WINAPI SymEnumSourceFilesW(HANDLE hProcess, ULONG64 ModBase, PCWSTR Mask,
             conversion_buffer_len = len;
         }
 
-        MultiByteToWideChar(CP_ACP, 0, ptr, -1, conversion_buffer, len);
+        utf8ztowchar(ptr, conversion_buffer, len);
 
         /* FIXME: not using Mask */
         sf.ModBase = ModBase;
@@ -209,7 +210,7 @@ static BOOL CALLBACK enum_source_files_W_to_A(PSOURCEFILEW source_file, PVOID co
     SOURCEFILE source_fileA;
     DWORD len;
 
-    len = WideCharToMultiByte(CP_ACP, 0, source_file->FileName, -1, NULL, 0, NULL, NULL);
+    len = wcharzestimate(source_file->FileName);
     if (len > ctx->conversion_buffer_len)
     {
         char *ptr = ctx->conversion_buffer ? HeapReAlloc(GetProcessHeap(), 0, ctx->conversion_buffer, len) :
@@ -225,7 +226,7 @@ static BOOL CALLBACK enum_source_files_W_to_A(PSOURCEFILEW source_file, PVOID co
         ctx->conversion_buffer_len = len;
     }
 
-    WideCharToMultiByte(CP_ACP, 0, source_file->FileName, -1, ctx->conversion_buffer, len, NULL, NULL);
+    wcharztoutf8(source_file->FileName, ctx->conversion_buffer, len);
 
     source_fileA.ModBase = source_file->ModBase;
     source_fileA.FileName = ctx->conversion_buffer;
@@ -248,7 +249,7 @@ BOOL WINAPI SymEnumSourceFiles(HANDLE hProcess, ULONG64 ModBase, PCSTR Mask,
 
     if (Mask)
     {
-        DWORD len = MultiByteToWideChar(CP_ACP, 0, Mask, -1, NULL, 0);
+        DWORD len = utf8zestimate(Mask);
 
         maskW = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR));
         if (!maskW)
@@ -257,7 +258,7 @@ BOOL WINAPI SymEnumSourceFiles(HANDLE hProcess, ULONG64 ModBase, PCSTR Mask,
             return FALSE;
         }
 
-        MultiByteToWideChar(CP_ACP, 0, Mask, -1, maskW, len);
+        utf8ztowchar(Mask, maskW, len);
     }
 
     if (cbSrcFiles)

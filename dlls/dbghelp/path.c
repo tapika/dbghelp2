@@ -27,6 +27,7 @@
 #include "winnls.h"
 #include "winternl.h"
 #include "wine/debug.h"
+#include "cutf.h"
 
 WINE_DEFAULT_DEBUG_CHANNEL(dbghelp);
 
@@ -275,11 +276,11 @@ BOOL WINAPI SearchTreeForFile(PCSTR root, PCSTR file, PSTR buffer)
     WCHAR       bufferW[MAX_PATH];
     BOOL        ret;
 
-    MultiByteToWideChar(CP_ACP, 0, root, -1, rootW, MAX_PATH);
-    MultiByteToWideChar(CP_ACP, 0, file, -1, fileW, MAX_PATH);
+    utf8ztowchar(root, rootW, MAX_PATH);
+    utf8ztowchar(root, fileW, MAX_PATH);
     ret = SearchTreeForFileW(rootW, fileW, bufferW);
     if (ret)
-        WideCharToMultiByte(CP_ACP, 0, bufferW, -1, buffer, MAX_PATH, NULL, NULL);
+        wcharztoutf8(bufferW, buffer, sizeof(buffer));
     return ret;
 }
 
@@ -314,7 +315,7 @@ static BOOL CALLBACK enum_dir_treeWA(PCWSTR name, PVOID user)
 {
     struct enum_dir_treeWA*     edt = user;
 
-    WideCharToMultiByte(CP_ACP, 0, name, -1, edt->name, MAX_PATH, NULL, NULL);
+    wcharztoutf8(name, edt->name, MAX_PATH);
     return edt->cb(edt->name, edt->user);
 }
 
@@ -329,10 +330,10 @@ BOOL WINAPI EnumDirTree(HANDLE hProcess, PCSTR root, PCSTR file,
 
     edt.cb = cb;
     edt.user = user;
-    MultiByteToWideChar(CP_ACP, 0, root, -1, rootW, MAX_PATH);
-    MultiByteToWideChar(CP_ACP, 0, file, -1, fileW, MAX_PATH);
+    utf8ztowchar(root, rootW, MAX_PATH);
+    utf8ztowchar(root, fileW, MAX_PATH);
     if ((ret = EnumDirTreeW(hProcess, rootW, fileW, bufferW, enum_dir_treeWA, &edt)))
-        WideCharToMultiByte(CP_ACP, 0, bufferW, -1, buffer, MAX_PATH, NULL, NULL);
+        wcharztoutf8(bufferW, buffer, MAX_PATH);
     return ret;
 }
 
@@ -437,12 +438,12 @@ BOOL WINAPI SymFindFileInPath(HANDLE hProcess, PCSTR searchPath, PCSTR full_path
     edt.cb = cb;
     edt.user = user;
     if (searchPath)
-        MultiByteToWideChar(CP_ACP, 0, searchPath, -1, searchPathW, MAX_PATH);
-    MultiByteToWideChar(CP_ACP, 0, full_path, -1, full_pathW, MAX_PATH);
+        utf8ztowchar(searchPath, searchPathW, MAX_PATH);
+    utf8ztowchar(full_path, full_pathW, MAX_PATH);
     if ((ret =  SymFindFileInPathW(hProcess, searchPath ? searchPathW : NULL, full_pathW,
                                    id, two, three, flags,
                                    bufferW, enum_dir_treeWA, &edt)))
-        WideCharToMultiByte(CP_ACP, 0, bufferW, -1, buffer, MAX_PATH, NULL, NULL);
+        wcharztoutf8(bufferW, buffer, MAX_PATH);
     return ret;
 }
 
@@ -556,7 +557,7 @@ static BOOL CALLBACK module_find_cb(PCWSTR buffer, PVOID user)
             struct pdb_lookup           pdb_lookup;
             char                        fn[MAX_PATH];
 
-            WideCharToMultiByte(CP_ACP, 0, buffer, -1, fn, MAX_PATH, NULL, NULL);
+            wcharztoutf8(buffer, fn, MAX_PATH);
             pdb_lookup.filename = fn;
 
             if (mf->guid)
@@ -639,7 +640,7 @@ BOOL path_find_symbol_file(const struct process* pcs, const struct module* modul
     mf.dw2 = dw2;
     mf.matched = 0;
 
-    MultiByteToWideChar(CP_ACP, 0, full_path, -1, full_pathW, MAX_PATH);
+    utf8towchar(full_path, SIZE_MAX, full_pathW, MAX_PATH);
     filename = file_nameW(full_pathW);
     mf.kind = module_get_type_by_name(filename);
     *is_unmatched = FALSE;

@@ -33,6 +33,7 @@
 #include "wine/debug.h"
 #include "dbghelp_private.h"
 #include "winnls.h"
+#include "cutf.h"
 
 WINE_DEFAULT_DEBUG_CHANNEL(dbghelp);
 WINE_DECLARE_DEBUG_CHANNEL(dbghelp_symt);
@@ -147,14 +148,14 @@ static WCHAR* file_regex(const char* srcfile)
     }
     else
     {
-        DWORD  sz = MultiByteToWideChar(CP_ACP, 0, srcfile, -1, NULL, 0);
+        DWORD  sz = utf8zestimate(srcfile);
         WCHAR* srcfileW;
 
         /* FIXME: we use here the largest conversion for every char... could be optimized */
         p = mask = HeapAlloc(GetProcessHeap(), 0, (5 * strlen(srcfile) + 1 + sz) * sizeof(WCHAR));
         if (!mask) return NULL;
         srcfileW = mask + 5 * strlen(srcfile) + 1;
-        MultiByteToWideChar(CP_ACP, 0, srcfile, -1, srcfileW, sz);
+        utf8ztowchar(srcfile, srcfileW, sz);
 
         while (*srcfileW)
         {
@@ -1021,7 +1022,7 @@ void copy_symbolW(SYMBOL_INFOW* siw, const SYMBOL_INFO* si)
     siw->Tag = si->Tag;
     siw->NameLen = si->NameLen;
     siw->MaxNameLen = si->MaxNameLen;
-    MultiByteToWideChar(CP_ACP, 0, si->Name, -1, siw->Name, siw->MaxNameLen);
+    utf8ztowchar(si->Name, siw->Name, siw->MaxNameLen);
 }
 
 /******************************************************************
@@ -1135,10 +1136,10 @@ BOOL WINAPI SymEnumSymbols(HANDLE hProcess, ULONG64 BaseOfDll, PCSTR Mask,
 
     if (Mask)
     {
-        DWORD sz = MultiByteToWideChar(CP_ACP, 0, Mask, -1, NULL, 0);
+        DWORD sz = utf8zestimate( Mask);
         if (!(maskW = HeapAlloc(GetProcessHeap(), 0, sz * sizeof(WCHAR))))
             return FALSE;
-        MultiByteToWideChar(CP_ACP, 0, Mask, -1, maskW, sz);
+        utf8ztowchar(Mask, maskW, sz);
     }
     ret = doSymEnumSymbols(hProcess, BaseOfDll, maskW, EnumSymbolsCallback, UserContext);
     HeapFree(GetProcessHeap(), 0, maskW);
@@ -1558,9 +1559,9 @@ static void copy_line_W64_from_64(struct process* pcs, IMAGEHLP_LINEW64* l64w, c
 
     l64w->Key = l64->Key;
     l64w->LineNumber = l64->LineNumber;
-    len = MultiByteToWideChar(CP_ACP, 0, l64->FileName, -1, NULL, 0);
+    len = utf8zestimate(l64->FileName);
     if ((l64w->FileName = fetch_buffer(pcs, len * sizeof(WCHAR))))
-        MultiByteToWideChar(CP_ACP, 0, l64->FileName, -1, l64w->FileName, len);
+        utf8ztowchar(l64->FileName, l64w->FileName, len);
     l64w->Address = l64->Address;
 }
 
@@ -1828,13 +1829,13 @@ DWORD WINAPI UnDecorateSymbolNameW(const WCHAR *decorated_name, WCHAR *undecorat
     if (!undecorated_name || !undecorated_length)
         return 0;
 
-    len = WideCharToMultiByte(CP_ACP, 0, decorated_name, -1, NULL, 0, NULL, NULL);
+    len = wcharzestimate(decorated_name);
     if ((buf = HeapAlloc(GetProcessHeap(), 0, len)))
     {
-        WideCharToMultiByte(CP_ACP, 0, decorated_name, -1, buf, len, NULL, NULL);
+        wcharztoutf8(decorated_name, buf, len);
         if ((ptr = und_name(NULL, buf, 0, flags)))
         {
-            MultiByteToWideChar(CP_ACP, 0, ptr, -1, undecorated_name, undecorated_length);
+            utf8ztowchar(ptr, undecorated_name, undecorated_length);
             undecorated_name[undecorated_length - 1] = 0;
             ret = strlenW(undecorated_name);
             und_free(ptr);
@@ -1989,12 +1990,12 @@ BOOL WINAPI SymMatchStringA(PCSTR string, PCSTR re, BOOL _case)
     }
     TRACE("%s %s %c\n", string, re, _case ? 'Y' : 'N');
 
-    sz = MultiByteToWideChar(CP_ACP, 0, string, -1, NULL, 0);
+    sz = utf8ztowchar(string, NULL, 0);
     if ((strW = HeapAlloc(GetProcessHeap(), 0, sz * sizeof(WCHAR))))
-        MultiByteToWideChar(CP_ACP, 0, string, -1, strW, sz);
-    sz = MultiByteToWideChar(CP_ACP, 0, re, -1, NULL, 0);
+        utf8ztowchar(string, strW, sz);
+    sz = utf8zestimate(re);
     if ((reW = HeapAlloc(GetProcessHeap(), 0, sz * sizeof(WCHAR))))
-        MultiByteToWideChar(CP_ACP, 0, re, -1, reW, sz);
+        utf8ztowchar(re, reW, sz);
 
     if (strW && reW)
         ret = SymMatchStringW(strW, reW, _case);
@@ -2061,11 +2062,11 @@ BOOL WINAPI SymSearch(HANDLE hProcess, ULONG64 BaseOfDll, DWORD Index,
 
     if (Mask)
     {
-        DWORD sz = MultiByteToWideChar(CP_ACP, 0, Mask, -1, NULL, 0);
+        DWORD sz = utf8zestimate(Mask);
 
         if (!(maskW = HeapAlloc(GetProcessHeap(), 0, sz * sizeof(WCHAR))))
             return FALSE;
-        MultiByteToWideChar(CP_ACP, 0, Mask, -1, maskW, sz);
+        utf8ztowchar(Mask, maskW, sz);
     }
     ret = doSymSearch(hProcess, BaseOfDll, Index, SymTag, maskW, Address,
                       EnumSymbolsCallback, UserContext, Options);
@@ -2105,7 +2106,7 @@ BOOL WINAPI SymAddSymbol(HANDLE hProcess, ULONG64 BaseOfDll, PCSTR name,
 {
     WCHAR       nameW[MAX_SYM_NAME];
 
-    MultiByteToWideChar(CP_ACP, 0, name, -1, nameW, ARRAY_SIZE(nameW));
+    utf8ztowchar(name, nameW, ARRAY_SIZE(nameW));
     return SymAddSymbolW(hProcess, BaseOfDll, nameW, addr, size, flags);
 }
 
@@ -2189,11 +2190,11 @@ BOOL WINAPI SymEnumLines(HANDLE hProcess, ULONG64 base, PCSTR compiland,
                 if (!file) sci.FileName[0] = '\0';
                 else
                 {
-                    DWORD   sz = MultiByteToWideChar(CP_ACP, 0, file, -1, NULL, 0);
+                    DWORD   sz = utf8zestimate(file);
                     WCHAR*  fileW;
 
                     if ((fileW = HeapAlloc(GetProcessHeap(), 0, sz * sizeof(WCHAR))))
-                        MultiByteToWideChar(CP_ACP, 0, file, -1, fileW, sz);
+                        utf8ztowchar(file, fileW, sz);
                     if (SymMatchStringW(fileW, srcmask, FALSE))
                         strcpy(sci.FileName, file);
                     else

@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include "cutf.h"
 #include "dbghelp_private.h"
 #include "winerror.h"
 #include "psapi.h"
@@ -187,13 +188,13 @@ BOOL DBGHELP_API SymSetSearchPathW(HANDLE hProcess, PCWSTR searchPath)
 BOOL DBGHELP_API SymSetSearchPath(HANDLE hProcess, PCSTR searchPath)
 {
     BOOL        ret = FALSE;
-    unsigned    len;
+    size_t      len;
     WCHAR*      sp;
 
-    len = MultiByteToWideChar(CP_ACP, 0, searchPath, -1, NULL, 0);
+    len = utf8zestimate(searchPath);
     if ((sp = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR))))
     {
-        MultiByteToWideChar(CP_ACP, 0, searchPath, -1, sp, len);
+        utf8ztowchar(searchPath, sp, len);
 
         ret = SymSetSearchPathW(hProcess, sp);
         HeapFree(GetProcessHeap(), 0, sp);
@@ -227,8 +228,7 @@ BOOL DBGHELP_API SymGetSearchPath(HANDLE hProcess, PSTR szSearchPath,
     {
         ret = SymGetSearchPathW(hProcess, buffer, SearchPathLength);
         if (ret)
-            WideCharToMultiByte(CP_ACP, 0, buffer, SearchPathLength,
-                                szSearchPath, SearchPathLength, NULL, NULL);
+            wchartoutf8(buffer, SearchPathLength, szSearchPath, SearchPathLength);
         HeapFree(GetProcessHeap(), 0, buffer);
     }
     return ret;
@@ -388,11 +388,9 @@ BOOL DBGHELP_API SymInitialize(HANDLE hProcess, PCSTR UserSearchPath, BOOL fInva
 
     if (UserSearchPath)
     {
-        unsigned len;
-
-        len = MultiByteToWideChar(CP_ACP, 0, UserSearchPath, -1, NULL, 0);
+        size_t len = utf8zestimate(UserSearchPath);
         sp = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR));
-        MultiByteToWideChar(CP_ACP, 0, UserSearchPath, -1, sp, len);
+        utf8ztowchar(UserSearchPath, sp, len);
     }
 
     ret = SymInitializeW(hProcess, sp, fInvadeProcess);
@@ -566,8 +564,7 @@ BOOL pcs_callback(const struct process* pcs, ULONG action, void* data)
             idsl.BaseOfImage = idslW->BaseOfImage;
             idsl.CheckSum = idslW->CheckSum;
             idsl.TimeDateStamp = idslW->TimeDateStamp;
-            WideCharToMultiByte(CP_ACP, 0, idslW->FileName, -1,
-                                idsl.FileName, sizeof(idsl.FileName), NULL, NULL);
+            wcharztoutf8(idslW->FileName, idsl.FileName, sizeof(idsl.FileName));
             idsl.Reparse = idslW->Reparse;
             data = &idsl;
             break;

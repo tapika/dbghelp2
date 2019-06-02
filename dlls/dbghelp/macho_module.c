@@ -667,13 +667,13 @@ static BOOL macho_map_file(struct process *pcs, const WCHAR *filenameW,
     ifm->addr_size = (pcs->is_64bit) ? 64 : 32;
     fmap->header_size = (pcs->is_64bit) ? sizeof(struct mach_header_64) : sizeof(struct mach_header);
 
-    len = WideCharToMultiByte(CP_UNIXCP, 0, filenameW, -1, NULL, 0, NULL, NULL);
+    len = wcharzestimate(filenameW);
     if (!(filename = HeapAlloc(GetProcessHeap(), 0, len)))
     {
         WARN("failed to allocate filename buffer\n");
         return FALSE;
     }
-    WideCharToMultiByte(CP_UNIXCP, 0, filenameW, -1, filename, len, NULL, NULL);
+    wcharztoutf8(filenameW, filename, len);
 
     /* check that the file exists */
     if (stat(filename, &statbuf) == -1 || S_ISDIR(statbuf.st_mode))
@@ -1519,10 +1519,10 @@ static BOOL macho_load_file_from_path(struct process* pcs,
 
     if (!path) return FALSE;
 
-    len = MultiByteToWideChar(CP_UNIXCP, 0, path, -1, NULL, 0);
+    len = utf8zestimate(path);
     pathW = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR));
     if (!pathW) return FALSE;
-    MultiByteToWideChar(CP_UNIXCP, 0, path, -1, pathW, len);
+    utf8ztowchar(path, pathW, len);
 
     for (s = pathW; s && *s; s = (t) ? (t+1) : NULL)
     {
@@ -1566,13 +1566,13 @@ static BOOL macho_load_file_from_dll_path(struct process* pcs,
         WCHAR *name;
         unsigned len;
 
-        len = MultiByteToWideChar(CP_UNIXCP, 0, path, -1, NULL, 0);
+        len = utf8zestimate(path);
 
         name = HeapAlloc( GetProcessHeap(), 0,
                           (len + lstrlenW(filename) + 2) * sizeof(WCHAR) );
 
         if (!name) break;
-        MultiByteToWideChar(CP_UNIXCP, 0, path, -1, name, len);
+        utf8ztowchar(path, name, len);
         strcatW( name, S_SlashW );
         strcatW( name, filename );
         ret = macho_load_file(pcs, name, load_addr, macho_info);
@@ -1682,7 +1682,7 @@ static BOOL macho_enum_modules_internal(const struct process* pcs,
         {
             bufstr[sizeof(bufstr) - 1] = '\0';
             TRACE("[%d] image file %s\n", i, debugstr_a(bufstr));
-            MultiByteToWideChar(CP_UNIXCP, 0, bufstr, -1, bufstrW, ARRAY_SIZE(bufstrW));
+            utf8ztowchar(bufstr, bufstrW, ARRAY_SIZE(bufstrW));
             if (main_name && !bufstrW[0]) strcpyW(bufstrW, main_name);
             if (!cb(bufstrW, (unsigned long)info_array[i].imageLoadAddress, user)) break;
         }
@@ -1805,11 +1805,11 @@ static BOOL macho_search_loader(struct process* pcs, struct macho_info* macho_in
     {
         WCHAR* pathW;
 
-        len = MultiByteToWideChar(CP_UNIXCP, 0, path, -1, NULL, 0);
+        len = utf8zestimate(path);
         pathW = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR));
         if (pathW)
         {
-            MultiByteToWideChar(CP_UNIXCP, 0, path, -1, pathW, len);
+            utf8ztowchar(path, pathW, len);
             ret = macho_load_file(pcs, pathW, 0, macho_info);
             HeapFree(GetProcessHeap(), 0, pathW);
         }

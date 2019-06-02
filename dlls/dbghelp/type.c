@@ -109,9 +109,9 @@ WCHAR* symt_get_nameW(const struct symt* sym)
     DWORD sz;
 
     if (!name) return NULL;
-    sz = MultiByteToWideChar(CP_ACP, 0, name, -1, NULL, 0);
+    sz = utf8zestimate(name);
     if ((nameW = HeapAlloc(GetProcessHeap(), 0, sz * sizeof(WCHAR))))
-        MultiByteToWideChar(CP_ACP, 0, name, -1, nameW, sz);
+        utf8ztowchar(name, nameW, sz);
     return nameW;
 }
 
@@ -764,10 +764,10 @@ BOOL symt_get_info(struct module* module, const struct symt* type,
         {
             const char* name = symt_get_name(type);
             if (!name) return FALSE;
-            len = MultiByteToWideChar(CP_ACP, 0, name, -1, NULL, 0);
+            len = utf8zestimate(name);
             X(WCHAR*) = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR));
             if (!X(WCHAR*)) return FALSE;
-            MultiByteToWideChar(CP_ACP, 0, name, -1, X(WCHAR*), len);
+            utf8ztowchar(name, X(WCHAR*), len);
         }
         break;
 

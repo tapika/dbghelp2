@@ -105,6 +105,9 @@
     <ClCompile Include="libs\port\stubs.c">
       <Filter>libs\port</Filter>
     </ClCompile>
+    <ClCompile Include="dlls\dbghelp\cutf.cpp">
+      <Filter>dlls\dbghelp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dlls\dbghelp\dbghelp_private.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="include\Windows\mmap-windows.h">
       <Filter>include\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="dlls\dbghelp\cutf.h">
+      <Filter>dlls\dbghelp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

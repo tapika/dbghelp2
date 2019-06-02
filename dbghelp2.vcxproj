@@ -26,6 +26,7 @@
     <ClCompile Include="dlls\dbghelp\cpu_ppc.c" />
     <ClCompile Include="dlls\dbghelp\cpu_x86_64.c" />
     <ClCompile Include="dlls\dbghelp\crc32.c" />
+    <ClCompile Include="dlls\dbghelp\cutf.cpp" />
     <ClCompile Include="dlls\dbghelp\dbghelp.c" />
     <ClCompile Include="dlls\dbghelp\dwarf.c" />
     <ClCompile Include="dlls\dbghelp\elf_module.c" />
@@ -47,6 +48,7 @@
     <ClCompile Include="libs\port\stubs.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dlls\dbghelp\cutf.h" />
     <ClInclude Include="dlls\dbghelp\dbghelp_private.h" />
     <ClInclude Include="dlls\dbghelp\dwarf.h" />
     <ClInclude Include="dlls\dbghelp\image_private.h" />

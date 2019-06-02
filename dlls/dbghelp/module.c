@@ -30,6 +30,7 @@
 #include "winternl.h"
 #include "wine/debug.h"
 #include "wine/heap.h"
+#include "cutf.h"
 
 WINE_DEFAULT_DEBUG_CHANNEL(dbghelp);
 
@@ -89,9 +90,9 @@ static BOOL is_wine_loader(const WCHAR *module)
     if ((ptr = getenv("WINELOADER")))
     {
         if ((p = strrchr(ptr, '/'))) ptr = p + 1;
-        len = 2 + MultiByteToWideChar( CP_UNIXCP, 0, ptr, -1, NULL, 0 );
+        len = 2 + utf8zestimate( ptr);
         buffer = heap_alloc( len * sizeof(WCHAR) );
-        MultiByteToWideChar( CP_UNIXCP, 0, ptr, -1, buffer, len );
+        utf8ztowchar( ptr, buffer, len );
     }
     else
     {
@@ -151,9 +152,9 @@ WCHAR *get_wine_loader_name(struct process *pcs)
      */
     if ((env = getenv("WINELOADER")))
     {
-        DWORD len = 2 + MultiByteToWideChar( CP_UNIXCP, 0, env, -1, NULL, 0 );
+        DWORD len = 2 + utf8zestimate(env );
         buffer = heap_alloc( len * sizeof(WCHAR) );
-        MultiByteToWideChar( CP_UNIXCP, 0, env, -1, buffer, len );
+        utf8ztowchar( env, buffer, len );
     }
     else
     {
@@ -280,7 +281,7 @@ struct module* module_find_by_nameA(const struct process* pcs, const char* name)
 {
     WCHAR wname[MAX_PATH];
 
-    MultiByteToWideChar(CP_ACP, 0, name, -1, wname, ARRAY_SIZE(wname));
+    utf8ztowchar(name, wname, ARRAY_SIZE(wname));
     return module_find_by_nameW(pcs, wname);
 }
 
@@ -565,16 +566,16 @@ DWORD64 WINAPI  SymLoadModuleEx(HANDLE hProcess, HANDLE hFile, PCSTR ImageName,
 
     if (ImageName)
     {
-        len = MultiByteToWideChar(CP_ACP, 0, ImageName, -1, NULL, 0);
+        len = utf8zestimate(ImageName);
         wImageName = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR));
-        MultiByteToWideChar(CP_ACP, 0, ImageName, -1, wImageName, len);
+        utf8ztowchar(ImageName, wImageName, len);
     }
     else wImageName = NULL;
     if (ModuleName)
     {
-        len = MultiByteToWideChar(CP_ACP, 0, ModuleName, -1, NULL, 0);
+        len = utf8zestimate(ModuleName);
         wModuleName = HeapAlloc(GetProcessHeap(), 0, len * sizeof(WCHAR));
-        MultiByteToWideChar(CP_ACP, 0, ModuleName, -1, wModuleName, len);
+        utf8ztowchar(ModuleName, wModuleName, len);
     }
     else wModuleName = NULL;
 
@@ -771,7 +772,7 @@ static BOOL CALLBACK enum_modW64_32(PCWSTR name, DWORD64 base, PVOID user)
 {
     struct enum_modW64_32*      x = user;
 
-    WideCharToMultiByte(CP_ACP, 0, name, -1, x->module, sizeof(x->module), NULL, NULL);
+    wcharztoutf8(name, x->module, sizeof(x->module));
     return x->cb(x->module, (DWORD)base, x->user);
 }
 
@@ -802,7 +803,7 @@ static BOOL CALLBACK enum_modW64_64(PCWSTR name, DWORD64 base, PVOID user)
 {
     struct enum_modW64_64*      x = user;
 
-    WideCharToMultiByte(CP_ACP, 0, name, -1, x->module, sizeof(x->module), NULL, NULL);
+    wcharztoutf8(name, x->module, sizeof(x->module));
     return x->cb(x->module, base, x->user);
 }
 
@@ -859,7 +860,7 @@ static BOOL CALLBACK enum_load_modW64_64(PCWSTR name, DWORD64 base, ULONG size,
 {
     struct enum_load_modW64_64* x = user;
 
-    WideCharToMultiByte(CP_ACP, 0, name, -1, x->module, sizeof(x->module), NULL, NULL);
+    wcharztoutf8( name, x->module, sizeof(x->module));
     return x->cb(x->module, base, size, x->user);
 }
 
@@ -890,7 +891,7 @@ static BOOL CALLBACK enum_load_modW64_32(PCWSTR name, DWORD64 base, ULONG size,
                                          PVOID user)
 {
     struct enum_load_modW64_32* x = user;
-    WideCharToMultiByte(CP_ACP, 0, name, -1, x->module, sizeof(x->module), NULL, NULL);
+    wcharztoutf8(name, x->module, sizeof(x->module));
     return x->cb(x->module, (DWORD)base, size, x->user);
 }
 
@@ -946,7 +947,7 @@ BOOL  WINAPI EnumerateLoadedModulesW64(HANDLE hProcess,
 
 static void dbghelp_str_WtoA(const WCHAR *src, char *dst, int dst_len)
 {
-    WideCharToMultiByte(CP_ACP, 0, src, -1, dst, dst_len - 1, NULL, NULL);
+    wcharztoutf8( src, dst, dst_len - 1);
     dst[dst_len - 1] = 0;
 }
 
