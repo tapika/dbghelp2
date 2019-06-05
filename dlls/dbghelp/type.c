@@ -25,6 +25,7 @@
 #define NONAMELESSUNION
 
 #include "config.h"
+#include "cutf.h"
 #include <stdlib.h>
 #include <stdarg.h>
 #include <assert.h>
